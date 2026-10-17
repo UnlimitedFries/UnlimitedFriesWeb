@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="About" description="Meet the team behind Unlimited Fries.">
+  <div class="container-page max-w-4xl pt-16">
+    <h1 class="text-5xl md:text-6xl">About us</h1>
+    <p class="mt-6 max-w-2xl text-lg">
+      Unlimited Fries is an independent video game studio. Tell your story here: who you are, what
+      you make, and why.
+    </p>
+
+    <h2 class="mt-16 text-3xl">The team</h2>
+    <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        team.map((member) => (
+          <li class="bg-night text-ivory rounded-lg p-5">
+            <h3 class="text-xl">{member.data.name}</h3>
+            <p class="text-fry mt-1 text-sm font-bold">{member.data.role}</p>
+            <ul class="mt-3 flex flex-wrap gap-3 text-sm underline">
+              {member.data.links.map((l) => (
+                <li>
+                  <a href={l.url} rel="noopener">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>

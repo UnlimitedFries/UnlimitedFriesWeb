@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('devlog', (p) => !p.data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<BaseLayout
+  title="Devlog"
+  description="Progress updates and behind-the-scenes notes from Unlimited Fries."
+>
+  <div class="container-page max-w-3xl pt-16">
+    <h1 class="text-5xl md:text-6xl">Devlog</h1>
+    <ul class="divide-night/15 mt-10 divide-y">
+      {
+        posts.map((post) => (
+          <li class="py-6">
+            <time datetime={post.data.date.toISOString()} class="text-sm opacity-70">
+              {post.data.date.toLocaleDateString('en-US', { dateStyle: 'long', timeZone: 'UTC' })}
+            </time>
+            <h2 class="mt-1 text-2xl">
+              <a href={`/devlog/${post.id}/`} class="hover:underline">
+                {post.data.title}
+              </a>
+            </h2>
+            <p class="mt-2">{post.data.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>

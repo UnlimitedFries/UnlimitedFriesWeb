@@ -1,0 +1,26 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  game: CollectionEntry<'games'>;
+}
+const { game } = Astro.props;
+---
+
+<a
+  href={`/games/${game.id}/`}
+  class="bg-night text-ivory block overflow-hidden rounded-lg transition hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--color-fry)]"
+>
+  <div class="bg-fry/20 aspect-video">
+    {
+      game.data.cover && (
+        <img src={game.data.cover} alt="" class="h-full w-full object-cover" loading="lazy" />
+      )
+    }
+  </div>
+  <div class="p-5">
+    <p class="text-fry font-brand text-xs font-bold uppercase italic">{game.data.status}</p>
+    <h3 class="mt-1 text-2xl">{game.data.title}</h3>
+    <p class="mt-2 text-sm opacity-80">{game.data.tagline}</p>
+  </div>
+</a>

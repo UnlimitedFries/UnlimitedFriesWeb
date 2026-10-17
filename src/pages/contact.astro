@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// TODO: confirm the real contact address.
+const email = 'hello@unlimitedfries.com';
+---
+
+<BaseLayout title="Contact" description="Get in touch with Unlimited Fries.">
+  <div class="container-page max-w-3xl pt-16">
+    <h1 class="text-5xl md:text-6xl">Contact</h1>
+    <p class="mt-6 text-lg">
+      Questions, collaborations or just want to say hi? Email us at
+      <a class="font-bold underline" href={`mailto:${email}`}>{email}</a>.
+    </p>
+    <!-- TODO: add social links (Discord, Bluesky, YouTube, etc.) -->
+  </div>
+</BaseLayout>

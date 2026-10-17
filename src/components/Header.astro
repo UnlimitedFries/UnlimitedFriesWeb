@@ -1,0 +1,34 @@
+---
+const links = [
+  { href: '/games/', label: 'Games' },
+  { href: '/devlog/', label: 'Devlog' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
+const path = Astro.url.pathname;
+---
+
+<header class="bg-night text-ivory">
+  <div class="container-page flex flex-wrap items-center justify-between gap-4 py-4">
+    <a href="/" class="font-brand text-xl leading-none font-bold uppercase italic">
+      Unlimited<span class="text-fry"> Fries</span>
+    </a>
+    <nav aria-label="Main">
+      <ul class="font-brand flex gap-6 text-sm font-bold uppercase italic">
+        {
+          links.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                aria-current={path.startsWith(l.href) ? 'page' : undefined}
+                class="hover:text-fry aria-[current=page]:text-fry"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

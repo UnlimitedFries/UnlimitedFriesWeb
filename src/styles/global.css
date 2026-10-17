@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Agrandir Grand';
+  src: url('/fonts/AgrandirGrand-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@theme {
+  --color-ivory: #fffff0;
+  --color-fry: #febe27;
+  --color-night: #00001f;
+
+  --font-brand: 'Agrandir Grand', 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-ivory);
+    color: var(--color-night);
+    font-family: var(--font-body);
+    scroll-behavior: smooth;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-brand);
+    font-weight: 700;
+    font-style: italic;
+    text-transform: uppercase;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid var(--color-fry);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply bg-fry text-night inline-block rounded-md px-6 py-3 font-brand text-sm font-bold uppercase italic transition hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-night)];
+  }
+  .btn-dark {
+    @apply bg-night text-ivory;
+  }
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-6;
+  }
+}

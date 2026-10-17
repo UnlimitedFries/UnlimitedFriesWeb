@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GameCard from '../components/GameCard.astro';
+
+const games = (await getCollection('games')).filter((g) => g.data.featured);
+const posts = (await getCollection('devlog', (p) => !p.data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="bg-fry text-night">
+    <div class="container-page py-24 md:py-36">
+      <h1 class="text-6xl md:text-8xl">Always stay<br />hungry.</h1>
+      <p class="mt-6 max-w-xl text-lg">
+        Unlimited Fries is an independent video game studio making games with big appetite.
+      </p>
+      <a href="/games/" class="btn btn-dark mt-8">See our games</a>
+    </div>
+  </section>
+
+  {
+    games.length > 0 && (
+      <section class="container-page mt-20">
+        <h2 class="text-3xl md:text-4xl">Featured games</h2>
+        <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {games.map((game) => (
+            <GameCard game={game} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    posts.length > 0 && (
+      <section class="container-page mt-20">
+        <div class="flex items-end justify-between">
+          <h2 class="text-3xl md:text-4xl">Latest devlog</h2>
+          <a href="/devlog/" class="font-brand text-sm font-bold uppercase italic underline">
+            All posts
+          </a>
+        </div>
+        <ul class="divide-night/15 mt-8 divide-y">
+          {posts.map((post) => (
+            <li class="py-4">
+              <a
+                href={`/devlog/${post.id}/`}
+                class="group flex flex-wrap items-baseline justify-between gap-2"
+              >
+                <span class="font-brand text-xl font-bold uppercase italic group-hover:underline">
+                  {post.data.title}
+                </span>
+                <time datetime={post.data.date.toISOString()} class="text-sm opacity-70">
+                  {post.data.date.toLocaleDateString('en-US', {
+                    dateStyle: 'medium',
+                    timeZone: 'UTC',
+                  })}
+                </time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>

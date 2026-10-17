@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+
+# Licensed font files (brand font - do not commit)
+public/fonts/*.woff2
+public/fonts/*.woff
+public/fonts/*.ttf
+public/fonts/*.otf

@@ -1,0 +1,67 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const games = await getCollection('games');
+  return games.map((game) => ({ params: { id: game.id }, props: { game } }));
+}
+
+const { game } = Astro.props;
+const { Content } = await render(game);
+const { data } = game;
+---
+
+<BaseLayout title={data.title} description={data.tagline}>
+  <article class="container-page max-w-3xl pt-16">
+    <a href="/games/" class="font-brand text-sm font-bold uppercase italic underline"
+      >&larr; All games</a
+    >
+    <p class="text-night/70 font-brand mt-8 text-sm font-bold uppercase italic">{data.status}</p>
+    <h1 class="mt-2 text-5xl md:text-6xl">{data.title}</h1>
+    <p class="mt-4 text-xl">{data.tagline}</p>
+
+    <dl class="mt-8 flex flex-wrap gap-x-10 gap-y-2 text-sm">
+      <div>
+        <dt class="font-bold">Platforms</dt>
+        <dd>{data.platforms.join(', ')}</dd>
+      </div>
+      {
+        data.releaseDate && (
+          <div>
+            <dt class="font-bold">Release</dt>
+            <dd>{data.releaseDate}</dd>
+          </div>
+        )
+      }
+    </dl>
+
+    <div class="mt-8 flex flex-wrap gap-4">
+      {
+        data.steamUrl && (
+          <a class="btn" href={data.steamUrl} rel="noopener">
+            Steam
+          </a>
+        )
+      }
+      {
+        data.itchUrl && (
+          <a class="btn" href={data.itchUrl} rel="noopener">
+            itch.io
+          </a>
+        )
+      }
+      {
+        data.trailerUrl && (
+          <a class="btn btn-dark" href={data.trailerUrl} rel="noopener">
+            Trailer
+          </a>
+        )
+      }
+    </div>
+
+    <div class="mt-10 space-y-4 leading-relaxed">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
