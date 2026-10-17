@@ -9,18 +9,26 @@ const { game } = Astro.props;
 
 <a
   href={`/games/${game.id}/`}
-  class="bg-night text-ivory block overflow-hidden rounded-lg transition hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--color-fry)]"
+  class="card group block overflow-hidden transition hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--color-fry)]"
 >
-  <div class="bg-fry/20 aspect-video">
+  <div class="bg-fry/20 aspect-video overflow-hidden">
     {
       game.data.cover && (
-        <img src={game.data.cover} alt="" class="h-full w-full object-cover" loading="lazy" />
+        <img
+          src={game.data.cover}
+          alt=""
+          class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
       )
     }
   </div>
   <div class="p-5">
-    <p class="text-fry font-brand text-xs font-bold uppercase italic">{game.data.status}</p>
-    <h3 class="mt-1 text-2xl">{game.data.title}</h3>
+    <p class="hud text-fry">[{game.data.status}]</p>
+    <h3 class="mt-2 text-2xl">{game.data.title}</h3>
     <p class="mt-2 text-sm opacity-80">{game.data.tagline}</p>
+    <p class="hud mt-4 opacity-60">
+      {game.data.platforms.join(' / ')}{game.data.releaseDate ? ` · ${game.data.releaseDate}` : ''}
+    </p>
   </div>
 </a>

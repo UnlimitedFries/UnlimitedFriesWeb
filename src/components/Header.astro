@@ -8,15 +8,15 @@ const links = [
 const path = Astro.url.pathname;
 ---
 
-<header class="bg-night text-ivory">
-  <div class="container-page flex flex-wrap items-center justify-between gap-4 py-4">
+<header class="bg-night/90 border-ivory/10 sticky top-0 z-50 border-b backdrop-blur">
+  <div class="container-page flex flex-wrap items-center justify-between gap-x-8 gap-y-2 py-4">
     <a href="/" class="font-brand text-xl leading-none font-bold uppercase italic">
       Unlimited<span class="text-fry"> Fries</span>
     </a>
     <nav aria-label="Main">
-      <ul class="font-brand flex gap-6 text-sm font-bold uppercase italic">
+      <ul class="font-brand flex flex-wrap gap-x-6 gap-y-1 text-sm font-bold uppercase italic">
         {
-          links.map((l) => (
+          links.map((l, i) => (
             <li>
               <a
                 href={l.href}
@@ -24,6 +24,7 @@ const path = Astro.url.pathname;
                 class="hover:text-fry aria-[current=page]:text-fry"
               >
                 {l.label}
+                <sup class="hud text-fry ml-0.5 not-italic">{String(i + 1).padStart(2, '0')}</sup>
               </a>
             </li>
           ))

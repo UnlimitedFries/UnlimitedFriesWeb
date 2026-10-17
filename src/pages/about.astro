@@ -17,9 +17,9 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
     <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
         team.map((member) => (
-          <li class="bg-night text-ivory rounded-lg p-5">
+          <li class="card p-5">
             <h3 class="text-xl">{member.data.name}</h3>
-            <p class="text-fry mt-1 text-sm font-bold">{member.data.role}</p>
+            <p class="hud text-fry mt-2">{member.data.role}</p>
             <ul class="mt-3 flex flex-wrap gap-3 text-sm underline">
               {member.data.links.map((l) => (
                 <li>

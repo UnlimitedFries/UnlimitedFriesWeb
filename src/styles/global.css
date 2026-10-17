@@ -19,8 +19,8 @@
 
 @layer base {
   html {
-    background-color: var(--color-ivory);
-    color: var(--color-night);
+    background-color: var(--color-night);
+    color: var(--color-ivory);
     font-family: var(--font-body);
     scroll-behavior: smooth;
   }
@@ -48,7 +48,24 @@
     @apply bg-fry text-night inline-block rounded-md px-6 py-3 font-brand text-sm font-bold uppercase italic transition hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-night)];
   }
   .btn-dark {
-    @apply bg-night text-ivory;
+    @apply bg-ivory text-night;
+  }
+  .hud {
+    @apply font-mono text-xs tracking-widest uppercase;
+  }
+  .card {
+    @apply border-ivory/15 bg-ivory/5 rounded-lg border;
+  }
+  .drag-strip {
+    @apply flex cursor-grab snap-x snap-mandatory gap-4 overflow-x-auto pb-4 select-none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-fry) transparent;
+  }
+  .drag-strip.dragging {
+    @apply cursor-grabbing snap-none;
+  }
+  .drag-strip > * {
+    @apply w-[85%] shrink-0 snap-center sm:w-[60%];
   }
   .container-page {
     @apply mx-auto w-full max-w-6xl px-6;

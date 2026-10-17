@@ -4,27 +4,61 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import GameCard from '../components/GameCard.astro';
 
 const games = (await getCollection('games')).filter((g) => g.data.featured);
+const hero = games.find((g) => g.data.cover);
 const posts = (await getCollection('devlog', (p) => !p.data.draft))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
 ---
 
 <BaseLayout>
-  <section class="bg-fry text-night">
-    <div class="container-page py-24 md:py-36">
-      <h1 class="text-6xl md:text-8xl">Always stay<br />hungry.</h1>
-      <p class="mt-6 max-w-xl text-lg">
-        Unlimited Fries is an independent video game studio making games with big appetite.
-      </p>
-      <a href="/games/" class="btn btn-dark mt-8">See our games</a>
+  <!-- 01 Hero -->
+  <section class="relative isolate flex min-h-[85vh] items-end overflow-hidden">
+    {
+      hero?.data.cover && (
+        <img
+          src={hero.data.cover}
+          alt=""
+          class="absolute inset-0 -z-20 h-full w-full object-cover opacity-50"
+        />
+      )
+    }
+    <div class="from-night via-night/60 absolute inset-0 -z-10 bg-gradient-to-t to-transparent"></div>
+    <div class="container-page pt-32 pb-16">
+      <p class="hud text-fry">Independent game studio</p>
+      <h1 class="mt-4 text-6xl sm:text-7xl md:text-9xl">
+        Always stay<br /><span class="text-fry">hungry.</span>
+      </h1>
+      <div class="mt-10 flex flex-wrap items-center gap-6">
+        {
+          hero && (
+            <a href={`/games/${hero.id}/`} class="btn">
+              Play {hero.data.title}
+            </a>
+          )
+        }
+        <a href="#mission" class="hud opacity-70 hover:opacity-100">Scroll &darr;</a>
+      </div>
     </div>
   </section>
 
+  <!-- 02 Mission -->
+  <section id="mission" class="bg-fry text-night">
+    <div class="container-page py-20 md:py-28">
+      <p class="hud">[[ 01 // 03 ]] Who we are</p>
+      <p class="font-brand mt-6 max-w-4xl text-3xl leading-tight font-bold uppercase italic md:text-5xl">
+        We're Unlimited Fries, an independent studio making games with a big appetite.
+      </p>
+      <a href="/about/" class="btn btn-dark mt-10">About us</a>
+    </div>
+  </section>
+
+  <!-- 03 Games -->
   {
     games.length > 0 && (
-      <section class="container-page mt-20">
-        <h2 class="text-3xl md:text-4xl">Featured games</h2>
-        <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <section class="container-page pt-24">
+        <p class="hud text-fry">[[ 02 // 03 ]] What we're serving</p>
+        <h2 class="mt-3 text-4xl md:text-5xl">Games</h2>
+        <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {games.map((game) => (
             <GameCard game={game} />
           ))}
@@ -33,26 +67,26 @@ const posts = (await getCollection('devlog', (p) => !p.data.draft))
     )
   }
 
+  <!-- 04 Devlog -->
   {
     posts.length > 0 && (
-      <section class="container-page mt-20">
-        <div class="flex items-end justify-between">
-          <h2 class="text-3xl md:text-4xl">Latest devlog</h2>
-          <a href="/devlog/" class="font-brand text-sm font-bold uppercase italic underline">
-            All posts
-          </a>
+      <section class="container-page pt-24">
+        <p class="hud text-fry">[[ 03 // 03 ]] Fresh out of the fryer</p>
+        <div class="mt-3 flex items-end justify-between gap-4">
+          <h2 class="text-4xl md:text-5xl">Devlog</h2>
+          <a href="/devlog/" class="hud hover:text-fry underline">All posts</a>
         </div>
-        <ul class="divide-night/15 mt-8 divide-y">
+        <ul class="divide-ivory/15 mt-10 divide-y">
           {posts.map((post) => (
-            <li class="py-4">
+            <li class="py-5">
               <a
                 href={`/devlog/${post.id}/`}
                 class="group flex flex-wrap items-baseline justify-between gap-2"
               >
-                <span class="font-brand text-xl font-bold uppercase italic group-hover:underline">
+                <span class="font-brand group-hover:text-fry text-xl font-bold uppercase italic md:text-2xl">
                   {post.data.title}
                 </span>
-                <time datetime={post.data.date.toISOString()} class="text-sm opacity-70">
+                <time datetime={post.data.date.toISOString()} class="hud opacity-60">
                   {post.data.date.toLocaleDateString('en-US', {
                     dateStyle: 'medium',
                     timeZone: 'UTC',
@@ -65,4 +99,12 @@ const posts = (await getCollection('devlog', (p) => !p.data.draft))
       </section>
     )
   }
+
+  <!-- Contact CTA -->
+  <section class="bg-ivory text-night mt-24">
+    <div class="container-page flex flex-wrap items-center justify-between gap-6 py-16">
+      <h2 class="text-4xl md:text-5xl">Want to work together?</h2>
+      <a href="/contact/" class="btn">Let's talk</a>
+    </div>
+  </section>
 </BaseLayout>

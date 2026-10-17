@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import DragStrip from '../../components/DragStrip.astro';
 
 export async function getStaticPaths() {
   const games = await getCollection('games');
@@ -13,11 +14,9 @@ const { data } = game;
 ---
 
 <BaseLayout title={data.title} description={data.tagline}>
-  <article class="container-page max-w-3xl pt-16">
-    <a href="/games/" class="font-brand text-sm font-bold uppercase italic underline"
-      >&larr; All games</a
-    >
-    <p class="text-night/70 font-brand mt-8 text-sm font-bold uppercase italic">{data.status}</p>
+  <article class="container-page max-w-4xl pt-16">
+    <a href="/games/" class="hud hover:text-fry underline">&larr; All games</a>
+    <p class="hud text-fry mt-8">[{data.status}]</p>
     <h1 class="mt-2 text-5xl md:text-6xl">{data.title}</h1>
     <p class="mt-4 text-xl">{data.tagline}</p>
 
@@ -92,10 +91,8 @@ const { data } = game;
 
     {
       data.gallery.length > 0 && (
-        <div class="mt-10 grid gap-4 sm:grid-cols-2">
-          {data.gallery.map((src) => (
-            <img src={src} alt={`${data.title} screenshot`} class="w-full rounded-lg" loading="lazy" />
-          ))}
+        <div class="mt-10">
+          <DragStrip images={data.gallery} alt={`${data.title} screenshot`} />
         </div>
       )
     }

@@ -1,0 +1,67 @@
+---
+interface Props {
+  images: string[];
+  alt: string;
+}
+const { images, alt } = Astro.props;
+const total = String(images.length).padStart(2, '0');
+---
+
+<div data-drag-root>
+  <div class="hud mb-3 flex justify-between opacity-70">
+    <span>Drag to explore</span>
+    <span>[[ <span data-drag-current>01</span> // {total} ]]</span>
+  </div>
+  <div class="drag-strip" data-drag-strip>
+    {
+      images.map((src) => (
+        <img
+          src={src}
+          alt={alt}
+          draggable="false"
+          class="aspect-video rounded-lg object-cover"
+          loading="lazy"
+        />
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-drag-root]').forEach((root) => {
+    const strip = root.querySelector<HTMLElement>('[data-drag-strip]')!;
+    const counter = root.querySelector<HTMLElement>('[data-drag-current]')!;
+    let startX = 0;
+    let startScroll = 0;
+    let down = false;
+
+    strip.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') return; // touch scrolls natively
+      down = true;
+      startX = e.clientX;
+      startScroll = strip.scrollLeft;
+      strip.classList.add('dragging');
+      strip.setPointerCapture(e.pointerId);
+    });
+    strip.addEventListener('pointermove', (e) => {
+      if (down) strip.scrollLeft = startScroll - (e.clientX - startX);
+    });
+    const end = () => {
+      down = false;
+      strip.classList.remove('dragging');
+    };
+    strip.addEventListener('pointerup', end);
+    strip.addEventListener('pointercancel', end);
+
+    strip.addEventListener(
+      'scroll',
+      () => {
+        const first = strip.children[0] as HTMLElement;
+        const step = first.offsetWidth + 16;
+        const i = Math.min(strip.children.length, Math.round(strip.scrollLeft / step) + 1);
+        counter.textContent = String(i).padStart(2, '0');
+      },
+      { passive: true },
+    );
+  });
+</script>
