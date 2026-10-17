@@ -34,6 +34,22 @@ const { data } = game;
           </div>
         )
       }
+      {
+        data.price && (
+          <div>
+            <dt class="font-bold">Price</dt>
+            <dd>{data.price}</dd>
+          </div>
+        )
+      }
+      {
+        data.steamReviews && (
+          <div>
+            <dt class="font-bold">Steam reviews</dt>
+            <dd>{data.steamReviews}</dd>
+          </div>
+        )
+      }
     </dl>
 
     <div class="mt-8 flex flex-wrap gap-4">
@@ -52,15 +68,50 @@ const { data } = game;
         )
       }
       {
+        data.websiteUrl && (
+          <a class="btn btn-dark" href={data.websiteUrl} rel="noopener">
+            Game website
+          </a>
+        )
+      }
+      {
+        data.discordUrl && (
+          <a class="btn btn-dark" href={data.discordUrl} rel="noopener">
+            Discord
+          </a>
+        )
+      }
+      {
         data.trailerUrl && (
           <a class="btn btn-dark" href={data.trailerUrl} rel="noopener">
-            Trailer
+            YouTube
           </a>
         )
       }
     </div>
 
-    <div class="mt-10 space-y-4 leading-relaxed">
+    {
+      data.gallery.length > 0 && (
+        <div class="mt-10 grid gap-4 sm:grid-cols-2">
+          {data.gallery.map((src) => (
+            <img src={src} alt={`${data.title} screenshot`} class="w-full rounded-lg" loading="lazy" />
+          ))}
+        </div>
+      )
+    }
+
+    {
+      data.press.map((p) => (
+        <blockquote class="border-fry mt-10 border-l-8 pl-5 text-2xl">
+          <p class="font-brand font-bold italic">&ldquo;{p.quote}&rdquo;</p>
+          <footer class="mt-2 text-sm">
+            &mdash; {p.url ? <a class="underline" href={p.url}>{p.source}</a> : p.source}
+          </footer>
+        </blockquote>
+      ))
+    }
+
+    <div class="[&_h2]:text-2xl [&_h2]:mt-8 [&_ul]:list-disc [&_ul]:pl-6 mt-10 space-y-4 leading-relaxed">
       <Content />
     </div>
   </article>
