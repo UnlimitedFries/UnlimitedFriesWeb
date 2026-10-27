@@ -5,33 +5,64 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="About" description="Meet the team behind Unlimited Fries.">
-  <div class="container-page max-w-4xl pt-16">
-    <h1 class="text-5xl md:text-6xl">About us</h1>
-    <p class="mt-6 max-w-2xl text-lg">
-      Unlimited Fries is an independent video game studio. Tell your story here: who you are, what
-      you make, and why.
-    </p>
+<BaseLayout title="Studio" description="The people behind Unlimited Fries.">
+  <div class="container-page pt-36 md:pt-44">
+    <p class="tag text-ash" data-reveal>The studio</p>
+    <h1 class="mt-4 text-[clamp(4.5rem,17vw,15rem)] leading-[0.8]">
+      <span class="mask"><span>Built by</span></span>
+      <span class="mask"><span style="--d: 0.08s">{team.length} people<span class="text-fry">.</span></span></span>
+    </h1>
 
-    <h2 class="mt-16 text-3xl">The team</h2>
-    <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        team.map((member) => (
-          <li class="card p-5">
-            <h3 class="text-xl">{member.data.name}</h3>
-            <p class="hud text-fry mt-2">{member.data.role}</p>
-            <ul class="mt-3 flex flex-wrap gap-3 text-sm underline">
-              {member.data.links.map((l) => (
-                <li>
-                  <a href={l.url} rel="noopener">
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="mt-20 grid gap-10 md:grid-cols-12">
+      <p class="tag text-ash md:col-span-3" data-reveal>How we work</p>
+      <div class="text-bone/80 space-y-6 text-xl leading-relaxed md:col-span-8 md:text-2xl" data-reveal>
+        <p>
+          Unlimited Fries is an independent studio. We made Grimhook, a first-person grapple
+          platformer played by thousands on Steam, and we're building what comes next.
+        </p>
+        <p>
+          Small team, tight loops, and a lot of time spent making movement feel exactly right.
+          We'd rather cut a feature than ship one that feels soft.
+        </p>
+      </div>
+    </div>
+
+    <section class="mt-32">
+      <div class="mb-8 flex items-end justify-between">
+        <h2 class="text-[clamp(3rem,8vw,7rem)]"><span class="mask"><span>Team</span></span></h2>
+        <span class="tag text-ash pb-2">{String(team.length).padStart(2, '0')}</span>
+      </div>
+      <ul class="border-bone/15 border-b">
+        {
+          team.map((member, i) => {
+            const link = member.data.links[0];
+            return (
+              <li data-reveal style={`--d: ${i * 0.06}s`}>
+                <a
+                  href={link?.url}
+                  rel="noopener"
+                  class="group border-bone/15 relative isolate grid items-baseline gap-2 overflow-hidden border-t py-6 md:grid-cols-12 md:gap-8"
+                  data-cursor={link?.label}
+                >
+                  <span class="bg-bone absolute inset-0 -z-10 origin-bottom scale-y-0 transition-transform duration-500 ease-(--ease-out-expo) group-hover:scale-y-100" />
+                  <span class="tag text-ash group-hover:text-ink/60 transition-colors md:col-span-1 md:pl-4">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span class="font-display group-hover:text-ink text-5xl font-black uppercase transition-[color,translate] duration-500 ease-(--ease-out-expo) group-hover:translate-x-3 md:col-span-7 md:text-7xl">
+                    {member.data.name}
+                  </span>
+                  <span class="tag group-hover:text-ink transition-colors md:col-span-3">
+                    {member.data.role}
+                  </span>
+                  <span class="group-hover:text-ink hidden text-right text-2xl transition-[color,translate] duration-500 ease-(--ease-out-expo) group-hover:-translate-x-4 md:block">
+                    &nearr;
+                  </span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </section>
   </div>
 </BaseLayout>

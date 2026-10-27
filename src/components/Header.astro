@@ -2,34 +2,66 @@
 const links = [
   { href: '/games/', label: 'Games' },
   { href: '/devlog/', label: 'Devlog' },
-  { href: '/about/', label: 'About' },
+  { href: '/about/', label: 'Studio' },
   { href: '/contact/', label: 'Contact' },
 ];
 const path = Astro.url.pathname;
 ---
 
-<header class="bg-night/90 border-ivory/10 sticky top-0 z-50 border-b backdrop-blur">
-  <div class="container-page flex flex-wrap items-center justify-between gap-x-8 gap-y-2 py-4">
-    <a href="/" class="font-brand text-xl leading-none font-bold uppercase italic">
-      Unlimited<span class="text-fry"> Fries</span>
+<header
+  data-header
+  class="fixed inset-x-0 top-0 z-50 text-[#ebe7de] mix-blend-difference transition-transform duration-500 ease-(--ease-out-expo)"
+>
+  <div class="container-page flex items-center justify-between gap-6 py-5">
+    <a
+      href="/"
+      aria-label="Unlimited Fries home"
+      class="font-brand shrink-0 text-lg leading-none font-bold uppercase italic"
+      data-magnetic="0.2"
+    >
+      <span class="roll hidden sm:inline-block"><span>Unlimited Fries</span><span>Unlimited Fries</span></span>
+      <span class="roll sm:hidden"><span>UF</span><span>UF</span></span>
     </a>
     <nav aria-label="Main">
-      <ul class="font-brand flex flex-wrap gap-x-6 gap-y-1 text-sm font-bold uppercase italic">
+      <ul class="flex gap-x-5 font-mono text-[11px] tracking-[0.16em] uppercase md:gap-x-8">
         {
-          links.map((l, i) => (
-            <li>
-              <a
-                href={l.href}
-                aria-current={path.startsWith(l.href) ? 'page' : undefined}
-                class="hover:text-fry aria-[current=page]:text-fry"
-              >
-                {l.label}
-                <sup class="hud text-fry ml-0.5 not-italic">{String(i + 1).padStart(2, '0')}</sup>
-              </a>
-            </li>
-          ))
+          links.map((l) => {
+            const current = path.startsWith(l.href);
+            return (
+              <li>
+                <a href={l.href} aria-current={current ? 'page' : undefined} class="group relative">
+                  <span class="roll">
+                    <span>{l.label}</span>
+                    <span aria-hidden="true">{l.label}</span>
+                  </span>
+                  <span
+                    class:list={[
+                      'absolute -bottom-1.5 left-0 h-px w-full origin-left bg-current transition-transform duration-500 ease-(--ease-out-expo)',
+                      current ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
+                    ]}
+                  />
+                </a>
+              </li>
+            );
+          })
         }
       </ul>
     </nav>
   </div>
 </header>
+
+<script>
+  // Hide the header while scrolling down, bring it back on any upward scroll.
+  let last = 0;
+  addEventListener(
+    'scroll',
+    () => {
+      const header = document.querySelector<HTMLElement>('[data-header]');
+      if (!header) return;
+      const y = scrollY;
+      header.style.transform = y > last && y > 120 ? 'translateY(-110%)' : '';
+      last = y;
+    },
+    { passive: true },
+  );
+</script>

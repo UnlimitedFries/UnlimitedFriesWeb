@@ -17,6 +17,8 @@ const games = defineCollection({
     itchUrl: z.url().optional(),
     trailerUrl: z.url().optional(),
     cover: z.string().optional(),
+    // Wide atmospheric backdrop for the home page hero; falls back to cover.
+    hero: z.string().optional(),
     gallery: z.array(z.string()).default([]),
     press: z.array(z.object({ quote: z.string(), source: z.string(), url: z.url().optional() })).default([]),
     steamReviews: z.string().optional(),

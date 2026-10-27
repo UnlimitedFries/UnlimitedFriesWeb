@@ -3,15 +3,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 // TODO: confirm the real contact address.
 const email = 'hello@unlimitedfries.com';
+const reasons = ['Press & creators', 'Publishing & partners', 'Playtesting', 'Hiring & collabs'];
 ---
 
 <BaseLayout title="Contact" description="Get in touch with Unlimited Fries.">
-  <div class="container-page max-w-3xl pt-16">
-    <h1 class="text-5xl md:text-6xl">Contact</h1>
-    <p class="mt-6 text-lg">
-      Questions, collaborations or just want to say hi? Email us at
-      <a class="font-bold underline" href={`mailto:${email}`}>{email}</a>.
-    </p>
-    <!-- TODO: add social links (Discord, Bluesky, YouTube, etc.) -->
+  <div class="container-page pt-36 md:pt-44">
+    <p class="tag text-ash" data-reveal>Contact</p>
+    <h1 class="mt-4 text-[clamp(4.5rem,17vw,15rem)] leading-[0.8]">
+      <span class="mask"><span>Say</span></span>
+      <span class="mask"><span style="--d: 0.08s">something<span class="text-fry">.</span></span></span>
+    </h1>
+
+    <div class="mt-20 grid gap-10 md:grid-cols-12">
+      <p class="tag text-ash md:col-span-3" data-reveal>Email</p>
+      <div class="md:col-span-9" data-reveal>
+        <a
+          href={`mailto:${email}`}
+          class="link-sweep font-display text-[clamp(2rem,6vw,5rem)] leading-none font-bold break-all uppercase"
+          data-cursor="Mail"
+        >
+          {email}
+        </a>
+        <ul class="tag text-bone/70 mt-10 flex flex-wrap gap-3">
+          {reasons.map((r) => <li class="border-bone/20 border px-3 py-2">{r}</li>)}
+        </ul>
+      </div>
+    </div>
   </div>
 </BaseLayout>

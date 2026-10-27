@@ -7,19 +7,22 @@ const { images, alt } = Astro.props;
 const total = String(images.length).padStart(2, '0');
 ---
 
-<div data-drag-root>
-  <div class="hud mb-3 flex justify-between opacity-70">
-    <span>Drag to explore</span>
-    <span>[[ <span data-drag-current>01</span> // {total} ]]</span>
+<div data-drag-root data-reveal>
+  <div class="tag mb-5 flex items-center justify-between gap-6">
+    <span class="text-ash">Drag &larr; &rarr;</span>
+    <div class="bg-bone/15 relative h-px flex-1">
+      <span class="bg-fry absolute inset-y-0 left-0 w-0" data-drag-progress></span>
+    </div>
+    <span><span data-drag-current>01</span> <span class="text-ash">/ {total}</span></span>
   </div>
-  <div class="drag-strip" data-drag-strip>
+  <div class="drag-strip" data-drag-strip data-cursor="Drag">
     {
       images.map((src) => (
         <img
           src={src}
           alt={alt}
           draggable="false"
-          class="aspect-video rounded-lg object-cover"
+          class="aspect-video object-cover"
           loading="lazy"
         />
       ))
@@ -28,40 +31,58 @@ const total = String(images.length).padStart(2, '0');
 </div>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-drag-root]').forEach((root) => {
-    const strip = root.querySelector<HTMLElement>('[data-drag-strip]')!;
-    const counter = root.querySelector<HTMLElement>('[data-drag-current]')!;
-    let startX = 0;
-    let startScroll = 0;
-    let down = false;
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('[data-drag-root]').forEach((root) => {
+      const strip = root.querySelector<HTMLElement>('[data-drag-strip]')!;
+      const counter = root.querySelector<HTMLElement>('[data-drag-current]')!;
+      const progress = root.querySelector<HTMLElement>('[data-drag-progress]')!;
+      let startX = 0;
+      let startScroll = 0;
+      let lastX = 0;
+      let vel = 0;
+      let down = false;
 
-    strip.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'touch') return; // touch scrolls natively
-      down = true;
-      startX = e.clientX;
-      startScroll = strip.scrollLeft;
-      strip.classList.add('dragging');
-      strip.setPointerCapture(e.pointerId);
-    });
-    strip.addEventListener('pointermove', (e) => {
-      if (down) strip.scrollLeft = startScroll - (e.clientX - startX);
-    });
-    const end = () => {
-      down = false;
-      strip.classList.remove('dragging');
-    };
-    strip.addEventListener('pointerup', end);
-    strip.addEventListener('pointercancel', end);
+      // Release with momentum: keep gliding and decay the velocity.
+      const glide = () => {
+        if (down || Math.abs(vel) < 0.5) return;
+        strip.scrollLeft -= vel;
+        vel *= 0.94;
+        requestAnimationFrame(glide);
+      };
 
-    strip.addEventListener(
-      'scroll',
-      () => {
-        const first = strip.children[0] as HTMLElement;
-        const step = first.offsetWidth + 16;
-        const i = Math.min(strip.children.length, Math.round(strip.scrollLeft / step) + 1);
+      strip.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'touch') return; // touch scrolls natively
+        down = true;
+        startX = lastX = e.clientX;
+        startScroll = strip.scrollLeft;
+        vel = 0;
+        strip.classList.add('dragging');
+        strip.setPointerCapture(e.pointerId);
+      });
+      strip.addEventListener('pointermove', (e) => {
+        if (!down) return;
+        vel = e.clientX - lastX;
+        lastX = e.clientX;
+        strip.scrollLeft = startScroll - (e.clientX - startX);
+      });
+      const end = () => {
+        if (!down) return;
+        down = false;
+        strip.classList.remove('dragging');
+        requestAnimationFrame(glide);
+      };
+      strip.addEventListener('pointerup', end);
+      strip.addEventListener('pointercancel', end);
+
+      const update = () => {
+        const max = strip.scrollWidth - strip.clientWidth;
+        const p = max > 0 ? strip.scrollLeft / max : 0;
+        progress.style.width = `${Math.max(p, 1 / strip.children.length) * 100}%`;
+        const i = Math.round(p * (strip.children.length - 1)) + 1;
         counter.textContent = String(i).padStart(2, '0');
-      },
-      { passive: true },
-    );
+      };
+      strip.addEventListener('scroll', update, { passive: true });
+      update();
+    });
   });
 </script>

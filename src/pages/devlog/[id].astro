@@ -13,17 +13,23 @@ const { data } = post;
 ---
 
 <BaseLayout title={data.title} description={data.description}>
-  <article class="container-page max-w-3xl pt-16">
-    <a href="/devlog/" class="hud hover:text-fry underline">&larr; All posts</a>
-    <h1 class="mt-8 text-4xl md:text-5xl">{data.title}</h1>
-    <p class="mt-3 text-sm opacity-70">
-      <time datetime={data.date.toISOString()}>
-        {data.date.toLocaleDateString('en-US', { dateStyle: 'long', timeZone: 'UTC' })}
-      </time>
-      &middot; {data.author}
-    </p>
-    <div class="mt-10 space-y-4 leading-relaxed">
-      <Content />
+  <article class="container-page pt-36 md:pt-44">
+    <a href="/devlog/" class="tag text-ash link-sweep" data-reveal>&larr; All posts</a>
+    <h1 class="mt-8 max-w-5xl text-[clamp(3.5rem,10vw,9rem)]">
+      <span class="mask"><span>{data.title}</span></span>
+    </h1>
+    <div class="tag border-bone/15 mt-10 flex flex-wrap gap-x-10 gap-y-2 border-y py-4" data-reveal>
+      <span><span class="text-ash">Date</span>&nbsp;&nbsp;
+        <time datetime={data.date.toISOString()}>
+          {data.date.toLocaleDateString('en-US', { dateStyle: 'long', timeZone: 'UTC' })}
+        </time>
+      </span>
+      <span><span class="text-ash">By</span>&nbsp;&nbsp;{data.author}</span>
+    </div>
+    <div class="mt-14 grid md:grid-cols-12">
+      <div class="prose-grit md:col-span-8 md:col-start-4" data-reveal>
+        <Content />
+      </div>
     </div>
   </article>
 </BaseLayout>

@@ -7,10 +7,13 @@ const games = await getCollection('games');
 ---
 
 <BaseLayout title="Games" description="Games made by Unlimited Fries.">
-  <div class="container-page pt-16">
-    <h1 class="text-5xl md:text-6xl">Games</h1>
-    <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {games.map((game) => <GameCard game={game} />)}
+  <div class="container-page pt-36 md:pt-44">
+    <p class="tag text-ash" data-reveal>Catalogue / {String(games.length).padStart(2, '0')}</p>
+    <h1 class="mt-4 text-[clamp(5rem,20vw,18rem)] leading-[0.8]">
+      <span class="mask"><span>Games</span></span>
+    </h1>
+    <div class="mt-16 space-y-24">
+      {games.map((game, i) => <GameCard game={game} index={i} />)}
     </div>
   </div>
 </BaseLayout>

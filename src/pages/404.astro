@@ -3,10 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Page not found">
-  <div class="container-page py-24">
-    <h1 class="text-6xl">404</h1>
-    <p class="mt-4 text-lg">
-      This page got eaten. Try heading <a class="font-bold underline" href="/">home</a>.
+  <div class="container-page pt-36 md:pt-44">
+    <p class="tag text-ash" data-reveal>Error 404</p>
+    <h1 class="mt-4 text-[clamp(6rem,30vw,26rem)] leading-[0.8]">
+      <span class="mask"><span>Lost<span class="text-fry">.</span></span></span>
+    </h1>
+    <p class="text-bone/80 mt-8 max-w-md text-xl" data-reveal>
+      Nothing down here but rocks. This page doesn't exist or got moved.
     </p>
+    <div class="mt-10" data-reveal>
+      <a href="/" class="btn btn-solid" data-magnetic>Back to surface <span class="arrow">&rarr;</span></a>
+    </div>
   </div>
 </BaseLayout>

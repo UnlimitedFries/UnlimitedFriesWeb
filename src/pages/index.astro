@@ -4,94 +4,154 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import GameCard from '../components/GameCard.astro';
 
 const games = (await getCollection('games')).filter((g) => g.data.featured);
-const hero = games.find((g) => g.data.cover);
+const hero = games.find((g) => g.data.hero ?? g.data.cover);
+const heroImage = hero && (hero.data.hero ?? hero.data.cover);
 const posts = (await getCollection('devlog', (p) => !p.data.draft))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
+
+const ticker = hero
+  ? [
+      hero.data.title,
+      hero.data.status === 'Released' ? 'Out now' : hero.data.status,
+      hero.data.price && `${hero.data.price} on Steam`,
+      hero.data.steamReviews?.split(' (')[0],
+    ].filter(Boolean)
+  : ['Always stay hungry'];
 ---
 
 <BaseLayout>
-  <!-- 01 Hero -->
-  <section class="relative isolate flex min-h-[85vh] items-end overflow-hidden">
+  <!-- Hero -->
+  <section id="top" class="relative isolate flex min-h-svh flex-col justify-end overflow-hidden">
     {
-      hero?.data.cover && (
+      heroImage && (
         <img
-          src={hero.data.cover}
+          src={heroImage}
           alt=""
-          class="absolute inset-0 -z-20 h-full w-full object-cover opacity-50"
+          data-parallax="0.35"
+          class="absolute inset-x-0 -top-[10%] -z-20 h-[120%] w-full object-cover opacity-70"
         />
       )
     }
-    <div class="from-night via-night/60 absolute inset-0 -z-10 bg-gradient-to-t to-transparent"></div>
-    <div class="container-page pt-32 pb-16">
-      <p class="hud text-fry">Independent game studio</p>
-      <h1 class="mt-4 text-6xl sm:text-7xl md:text-9xl">
-        Always stay<br /><span class="text-fry">hungry.</span>
+    <div class="from-ink via-ink/55 to-ink/30 absolute inset-0 -z-10 bg-linear-to-t from-10% via-45%"></div>
+
+    <div class="container-page pt-32 pb-10 md:pb-14">
+      <div class="tag text-bone/70 mb-8 flex flex-wrap gap-x-8 gap-y-2" data-reveal>
+        <span>Independent game studio</span>
+        {hero && <span>Latest: {hero.data.title}</span>}
+      </div>
+      <h1 class="text-[clamp(4.5rem,19vw,17rem)] leading-[0.82]">
+        <span class="mask"><span>Unlimited</span></span>
+        <span class="mask"><span style="--d: 0.08s">Fries<span class="text-fry">.</span></span></span>
       </h1>
-      <div class="mt-10 flex flex-wrap items-center gap-6">
+      <div
+        class="border-bone/20 mt-10 flex flex-wrap items-end justify-between gap-6 border-t pt-6"
+        data-reveal
+        style="--d: 0.25s"
+      >
+        <p class="text-bone/80 max-w-sm text-lg">
+          We make fast, physical first-person games.
+        </p>
         {
           hero && (
-            <a href={`/games/${hero.id}/`} class="btn">
-              Play {hero.data.title}
+            <a href={`/games/${hero.id}/`} class="btn btn-solid" data-magnetic>
+              Play {hero.data.title} <span class="arrow">&rarr;</span>
             </a>
           )
         }
-        <a href="#mission" class="hud opacity-70 hover:opacity-100">Scroll &darr;</a>
       </div>
     </div>
   </section>
 
-  <!-- 02 Mission -->
-  <section id="mission" class="bg-fry text-night">
-    <div class="container-page py-20 md:py-28">
-      <p class="hud">[[ 01 // 03 ]] Who we are</p>
-      <p class="font-brand mt-6 max-w-4xl text-3xl leading-tight font-bold uppercase italic md:text-5xl">
-        We're Unlimited Fries, an independent studio making games with a big appetite.
-      </p>
-      <a href="/about/" class="btn btn-dark mt-10">About us</a>
+  <!-- Ticker -->
+  <div class="border-bone/15 bg-ink marquee border-y py-5" data-marquee="-1" aria-hidden="true">
+    <div class="marquee-track">
+      <div class="flex shrink-0 items-center">
+        {
+          ticker.map((t) => (
+            <span class="font-display flex items-center text-5xl font-black uppercase md:text-7xl">
+              <span class="px-6 md:px-10">{t}</span>
+              <span class="text-fry text-3xl md:text-4xl">&#10022;</span>
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Statement -->
+  <section class="container-page py-28 md:py-44">
+    <p class="tag text-ash mb-10" data-reveal>The studio</p>
+    <p
+      data-words
+      class="font-display max-w-6xl text-[clamp(2.5rem,6.2vw,6rem)] leading-[0.95] font-bold uppercase"
+    >
+      Small studio. Fast, physical games. We obsess over how a jump lands, how a hit connects, how a
+      level pushes back. If it doesn't feel right in your hands, it doesn't ship.
+    </p>
+    <div class="mt-14" data-reveal>
+      <a href="/about/" class="btn" data-magnetic>Meet the team <span class="arrow">&rarr;</span></a>
     </div>
   </section>
 
-  <!-- 03 Games -->
+  <!-- Games -->
   {
     games.length > 0 && (
-      <section class="container-page pt-24">
-        <p class="hud text-fry">[[ 02 // 03 ]] What we're serving</p>
-        <h2 class="mt-3 text-4xl md:text-5xl">Games</h2>
-        <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {games.map((game) => (
-            <GameCard game={game} />
+      <section class="container-page">
+        <div class="mb-10 flex items-end justify-between gap-4">
+          <h2 class="text-[clamp(3rem,8vw,7rem)]">
+            <span class="mask">
+              <span>Games</span>
+            </span>
+          </h2>
+          <a href="/games/" class="tag link-sweep pb-2">
+            All games
+          </a>
+        </div>
+        <div class="space-y-20">
+          {games.map((game, i) => (
+            <GameCard game={game} index={i} />
           ))}
         </div>
       </section>
     )
   }
 
-  <!-- 04 Devlog -->
+  <!-- Devlog -->
   {
     posts.length > 0 && (
-      <section class="container-page pt-24">
-        <p class="hud text-fry">[[ 03 // 03 ]] Fresh out of the fryer</p>
-        <div class="mt-3 flex items-end justify-between gap-4">
-          <h2 class="text-4xl md:text-5xl">Devlog</h2>
-          <a href="/devlog/" class="hud hover:text-fry underline">All posts</a>
+      <section class="container-page pt-32 md:pt-44">
+        <div class="mb-10 flex items-end justify-between gap-4">
+          <h2 class="text-[clamp(3rem,8vw,7rem)]">
+            <span class="mask">
+              <span>Devlog</span>
+            </span>
+          </h2>
+          <a href="/devlog/" class="tag link-sweep pb-2">
+            All posts
+          </a>
         </div>
-        <ul class="divide-ivory/15 mt-10 divide-y">
-          {posts.map((post) => (
-            <li class="py-5">
+        <ul class="border-bone/15 border-b">
+          {posts.map((post, i) => (
+            <li data-reveal style={`--d: ${i * 0.08}s`}>
               <a
                 href={`/devlog/${post.id}/`}
-                class="group flex flex-wrap items-baseline justify-between gap-2"
+                class="group border-bone/15 relative isolate grid items-baseline gap-2 overflow-hidden border-t py-7 md:grid-cols-12 md:gap-8"
+                data-cursor="Read"
               >
-                <span class="font-brand group-hover:text-fry text-xl font-bold uppercase italic md:text-2xl">
+                <span class="bg-bone absolute inset-0 -z-10 origin-bottom scale-y-0 transition-transform duration-500 ease-(--ease-out-expo) group-hover:scale-y-100" />
+                <time
+                  datetime={post.data.date.toISOString()}
+                  class="tag text-ash group-hover:text-ink/60 transition-colors duration-300 md:col-span-3 md:pl-4"
+                >
+                  {post.data.date.toLocaleDateString('en-US', { dateStyle: 'medium', timeZone: 'UTC' })}
+                </time>
+                <span class="font-display group-hover:text-ink text-4xl font-black uppercase transition-[color,translate] duration-500 ease-(--ease-out-expo) group-hover:translate-x-3 md:col-span-7 md:text-5xl">
                   {post.data.title}
                 </span>
-                <time datetime={post.data.date.toISOString()} class="hud opacity-60">
-                  {post.data.date.toLocaleDateString('en-US', {
-                    dateStyle: 'medium',
-                    timeZone: 'UTC',
-                  })}
-                </time>
+                <span class="group-hover:text-ink hidden text-right text-3xl transition-[color,translate] duration-500 ease-(--ease-out-expo) group-hover:-translate-x-4 md:col-span-2 md:block">
+                  &rarr;
+                </span>
               </a>
             </li>
           ))}
@@ -100,11 +160,21 @@ const posts = (await getCollection('devlog', (p) => !p.data.draft))
     )
   }
 
-  <!-- Contact CTA -->
-  <section class="bg-ivory text-night mt-24">
-    <div class="container-page flex flex-wrap items-center justify-between gap-6 py-16">
-      <h2 class="text-4xl md:text-5xl">Want to work together?</h2>
-      <a href="/contact/" class="btn">Let's talk</a>
-    </div>
+  <!-- Contact -->
+  <section class="container-page pt-32 md:pt-44">
+    <p class="tag text-ash mb-6" data-reveal>Press, partners, playtesters</p>
+    <a href="/contact/" class="group block" data-cursor="Talk">
+      <span class="font-display block text-[clamp(4rem,15vw,14rem)] leading-[0.82] font-black uppercase">
+        <span class="mask"><span>Get in</span></span>
+        <span class="mask">
+          <span style="--d: 0.08s" class="flex items-center gap-[0.15em]">
+            touch
+            <span class="text-fry inline-block text-[0.6em] transition-transform duration-700 ease-(--ease-out-expo) group-hover:translate-x-6 group-hover:-rotate-45">
+              &rarr;
+            </span>
+          </span>
+        </span>
+      </span>
+    </a>
   </section>
 </BaseLayout>

@@ -31,3 +31,6 @@ public/fonts/*.woff2
 public/fonts/*.woff
 public/fonts/*.ttf
 public/fonts/*.otf
+
+# Full-resolution source art: kept locally / in shared storage, not in git
+source-art/

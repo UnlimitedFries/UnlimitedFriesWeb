@@ -9,10 +9,15 @@ steamUrl: https://store.steampowered.com/app/2667430/Grimhook/
 websiteUrl: https://www.grimhook.com
 trailerUrl: https://www.youtube.com/@GrimhookGame
 discordUrl: https://discord.gg/RYcVyEvNWr
-cover: /images/grimhook/gem.png
+cover: /images/grimhook/key-art.webp
+hero: /images/grimhook/sinkhole.webp
 gallery:
-  - /images/grimhook/gem.png
-  - /images/grimhook/mines.png
+  - /images/grimhook/sinkhole.webp
+  - /images/grimhook/gameplay-hook.webp
+  - /images/grimhook/cave.webp
+  - /images/grimhook/gameplay-gem.webp
+  - /images/grimhook/boat.webp
+  - /images/grimhook/mines-depot.webp
 featured: true
 press:
   - quote: A sweet, free first-person platformer with a touch of Lovecraft

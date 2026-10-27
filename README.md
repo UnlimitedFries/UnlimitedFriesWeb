@@ -34,6 +34,7 @@ src/
   pages/          Home, Games, Devlog, About, Contact, 404
   styles/         global.css (brand colors, font, Tailwind theme)
 public/           Static files (favicon, fonts, images)
+source-art/       Full-resolution originals (not deployed; export web copies into public/)
 ```
 
 ## Updating content
